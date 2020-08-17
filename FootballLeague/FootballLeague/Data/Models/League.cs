@@ -15,6 +15,5 @@ namespace FootballLeague.Data
         public ICollection<Team> Teams { get; set; }
 
         public ICollection<Match> Matches { get; set; }
-        // public virtual ICollection<LeagueMatches> LeagueMatches { get; set; }
     }
 }
