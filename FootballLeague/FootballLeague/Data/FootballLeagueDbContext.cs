@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using FootballLeague.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -10,8 +10,6 @@ namespace FootballLeague.Data
         public DbSet<Team> Teams { get; set; }
         public DbSet<Match> Matches { get; set; }
         public DbSet<League> Leagues { get; set; }
-
-        public IConfiguration Configuration { get; }
 
         public FootballLeagueDbContext(DbContextOptions<FootballLeagueDbContext> options)
            : base(options)

@@ -3,7 +3,6 @@
     public static class ErrorMessages
     {
         public const string MatchNotFound = "Match with this id {0} doesn't exist";
-        public const string MatchCannotBeDeleted = "Match with this id {0} is already played it cannot be deleted";
         public const string MatchIsPlayed = "Match with this id {0} between {1} and {2} is already played";
         public const string TeamNotFound = "Team with this id {0} doesn't exist";
         public const string TeamNotInLeague = "Team with this id {0} doesn't exist in this league with id {1}";

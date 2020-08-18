@@ -30,14 +30,6 @@
         public int AwayTeamId { get; set; }
 
         /// <summary>
-        /// Gets or sets flag is the match played.
-        /// </summary>
-        /// <value>
-        /// Is the match played flag.
-        /// </value>
-        public bool IsMatchPlayed { get; set; }
-
-        /// <summary>
         /// Gets or sets the home team goals.
         /// </summary>
         /// <value>
@@ -58,7 +50,7 @@
         /// </summary>
         /// <value>
         /// The match league id.
+        /// </value>
         public int LeagueId { get; set; }
-
     }
 }

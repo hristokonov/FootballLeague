@@ -23,6 +23,7 @@ namespace FootballLeague.Models.Request
         /// </summary>
         /// <value>
         /// The team league id.
+        /// </value>
         public int LeagueId { get; set; }
     }
 }

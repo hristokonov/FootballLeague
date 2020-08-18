@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FootballLeague.Data.Models;
 
 namespace FootballLeague.Services
 {
@@ -30,7 +31,7 @@ namespace FootballLeague.Services
 
             await CheckIfTeamExistByName(teamModel.Name, cancellationToken);
 
-            await _leagueService.CheckIfLeagueExistById((int)teamModel.LeagueId, cancellationToken);
+            await _leagueService.CheckIfLeagueExistById(teamModel.LeagueId, cancellationToken);
 
 
             var team = new Team

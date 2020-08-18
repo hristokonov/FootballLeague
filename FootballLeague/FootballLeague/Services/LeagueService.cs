@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FootballLeague.Data.Models;
 
 namespace FootballLeague.Services
 {
@@ -55,7 +56,7 @@ namespace FootballLeague.Services
                                       .ThenInclude(m => m.HomeMatches)
                                       .Include(l => l.Teams)
                                       .ThenInclude(m => m.AwayMatches)
-                                      .FirstOrDefaultAsync(l => l.Id == id);
+                                      .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
             if (league == null)
             {
                 throw new EntityNotFoundException($"League with this id {id} doesn't exist");

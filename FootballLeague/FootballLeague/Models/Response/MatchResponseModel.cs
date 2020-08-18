@@ -1,7 +1,7 @@
 ﻿namespace FootballLeague.Models.Response
 {
-    /// </summary>
-    /// This response model for the matche.
+    /// <summary>
+    /// This response model for the match.
     /// </summary>
     public class MatchResponseModel
     {

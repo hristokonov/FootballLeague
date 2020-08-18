@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace FootballLeague.Data
+namespace FootballLeague.Data.Models
 {
     /// <summary>
     /// Entity model for League table

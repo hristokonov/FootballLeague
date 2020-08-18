@@ -33,9 +33,9 @@ namespace FootballLeague.Controllers
         {
             _logger.LogInformation("Call made to CreateTeamAsync.");
 
-            var mathcId = await _matchService.CreateMatchAsync(matchModel, cancellationToken);
+            var matchId = await _matchService.CreateMatchAsync(matchModel, cancellationToken);
 
-            return new ObjectResult(mathcId) { StatusCode = StatusCodes.Status201Created };
+            return new ObjectResult(matchId) { StatusCode = StatusCodes.Status201Created };
         }
 
         /// <summary>

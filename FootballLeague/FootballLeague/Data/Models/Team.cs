@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace FootballLeague.Data
+namespace FootballLeague.Data.Models
 {
     /// <summary>
     /// Entity model for Team table
@@ -39,6 +39,7 @@ namespace FootballLeague.Data
         /// </summary>
         /// <value>
         /// The team scored goals.
+        /// </value>
         public int GoalsScored { get; set; }
 
         /// <summary>
@@ -46,6 +47,7 @@ namespace FootballLeague.Data
         /// </summary>
         /// <value>
         /// The team conceded goals.
+        /// </value>
         public int GoalsConceded { get; set; }
 
         /// <summary>
@@ -53,6 +55,7 @@ namespace FootballLeague.Data
         /// </summary>
         /// <value>
         /// The team league id.
+        /// </value>
         public int? LeagueId { get; set; }
 
         public ICollection<Match> HomeMatches { get; set; }

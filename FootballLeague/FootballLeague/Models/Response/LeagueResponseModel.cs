@@ -2,7 +2,7 @@
 
 namespace FootballLeague.Models.Response
 {
-    /// </summary>
+    /// <summary>
     /// This response model is used to get the information about a league table.
     /// </summary>
     public class LeagueResponseModel

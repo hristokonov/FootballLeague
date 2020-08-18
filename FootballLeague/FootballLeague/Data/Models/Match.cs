@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FootballLeague.Data
+namespace FootballLeague.Data.Models
 {
     /// <summary>
     /// Entity model for Match table
@@ -61,6 +61,7 @@ namespace FootballLeague.Data
         /// </summary>
         /// <value>
         /// The match league id.
+        /// </value>
         public int LeagueId { get; set; }
 
         public Team HomeTeam { get; set; }
