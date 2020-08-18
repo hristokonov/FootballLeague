@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FootballLeague.Migrations
 {
-    public partial class initial : Migration
+    public partial class Completed : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,11 +26,9 @@ namespace FootballLeague.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(maxLength: 30, nullable: true),
-                    City = table.Column<string>(maxLength: 30, nullable: true),
                     Points = table.Column<int>(nullable: false),
                     GoalsScored = table.Column<int>(nullable: false),
-                    GoalsConcede = table.Column<int>(nullable: false),
-                    GoalDifference = table.Column<int>(nullable: false),
+                    GoalsConceded = table.Column<int>(nullable: false),
                     LeagueId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -56,7 +53,6 @@ namespace FootballLeague.Migrations
                     IsMatchPlayed = table.Column<bool>(nullable: false),
                     HomeTeamGoals = table.Column<int>(nullable: false),
                     AwayTeamGoals = table.Column<int>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: false),
                     LeagueId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -82,6 +78,41 @@ namespace FootballLeague.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Leagues",
+                columns: new[] { "Id", "Name" },
+                values: new object[] { 1, "Euro League" });
+
+            migrationBuilder.InsertData(
+                table: "Teams",
+                columns: new[] { "Id", "GoalsConceded", "GoalsScored", "LeagueId", "Name", "Points" },
+                values: new object[,]
+                {
+                    { 1, 4, 9, 1, "Real Madrid", 9 },
+                    { 2, 5, 8, 1, "PSG", 6 },
+                    { 3, 8, 2, 1, "Barcelona", 1 },
+                    { 4, 6, 4, 1, "Arsenal", 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Matches",
+                columns: new[] { "Id", "AwayTeamGoals", "AwayTeamId", "HomeTeamGoals", "HomeTeamId", "IsMatchPlayed", "LeagueId" },
+                values: new object[,]
+                {
+                    { 1, 2, 2, 3, 1, true, 1 },
+                    { 3, 1, 3, 4, 1, true, 1 },
+                    { 6, 0, 3, 3, 2, true, 1 },
+                    { 2, 1, 4, 1, 3, true, 1 },
+                    { 4, 2, 4, 3, 2, true, 1 },
+                    { 5, 1, 4, 2, 1, true, 1 }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Leagues_Name",
+                table: "Leagues",
+                column: "Name",
+                unique: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_Matches_AwayTeamId",
                 table: "Matches",
@@ -101,6 +132,13 @@ namespace FootballLeague.Migrations
                 name: "IX_Teams_LeagueId",
                 table: "Teams",
                 column: "LeagueId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teams_Name",
+                table: "Teams",
+                column: "Name",
+                unique: true,
+                filter: "[Name] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace FootballLeague.Data
 {
@@ -17,23 +19,29 @@ namespace FootballLeague.Data
 
         }
 
-        public FootballLeagueDbContext(DbContextOptions<FootballLeagueDbContext> options, IConfiguration configuration)
-         : base(options)
+        private void LoadJson(ModelBuilder builder)
         {
-            Configuration = configuration;
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder builder)
-        {
-            if (!builder.IsConfigured)
+            if (File.Exists(@"..\FootballLeague\Data\JsonFiles\Leagues.json")
+                && File.Exists(@"..\FootballLeague\Data\JsonFiles\Teams.json")
+                && File.Exists(@"..\FootballLeague\Data\JsonFiles\Matches.json")
+              )
             {
-                builder.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionHristo"));
+                var leagues = JsonConvert.DeserializeObject<League[]>
+                   (File.ReadAllText(@"..\FootballLeague\Data\JsonFiles\Leagues.json"));
+                var teams = JsonConvert.DeserializeObject<Team[]>
+                    (File.ReadAllText(@"..\FootballLeague\Data\JsonFiles\Teams.json"));
+                var matches = JsonConvert.DeserializeObject<Match[]>
+                    (File.ReadAllText(@"..\FootballLeague\Data\JsonFiles\Matches.json"));
+
+                builder.Entity<League>().HasData(leagues);
+                builder.Entity<Team>().HasData(teams);
+                builder.Entity<Match>().HasData(matches);
             }
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            //LoadJson(builder);
+            LoadJson(builder);
 
             builder.Entity<Match>()
                          .HasOne(m => m.AwayTeam)
@@ -48,6 +56,14 @@ namespace FootballLeague.Data
                         .HasForeignKey(m => m.HomeTeamId)
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+            builder.Entity<League>()
+                        .HasIndex(l => l.Name)
+                        .IsUnique();
+
+            builder.Entity<Team>()
+                        .HasIndex(t => t.Name)
+                        .IsUnique();
 
             base.OnModelCreating(builder);
         }

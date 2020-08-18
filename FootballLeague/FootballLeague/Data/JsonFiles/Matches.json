@@ -1,0 +1,56 @@
+[
+  {
+    "Id": "1",
+    "HomeTeamId": 1,
+    "AwayTeamId": 2,
+    "HomeTeamGoals": 3,
+    "AwayTeamGoals": 2,
+    "IsMatchPlayed": true,
+    "LeagueId": 1
+  },
+  {
+    "Id": "2",
+    "HomeTeamId": 3,
+    "AwayTeamId": 4,
+    "HomeTeamGoals": 1,
+    "AwayTeamGoals": 1,
+    "IsMatchPlayed": true,
+    "LeagueId": 1
+  },
+  {
+    "Id": "3",
+    "HomeTeamId": 1,
+    "AwayTeamId": 3,
+    "HomeTeamGoals": 4,
+    "AwayTeamGoals": 1,
+    "IsMatchPlayed": true,
+    "LeagueId": 1
+  },
+  {
+    "Id": "4",
+    "HomeTeamId": 2,
+    "AwayTeamId": 4,
+    "HomeTeamGoals": 3,
+    "AwayTeamGoals": 2,
+    "IsMatchPlayed": true,
+    "LeagueId": 1
+  },
+  {
+    "Id": "5",
+    "HomeTeamId": 1,
+    "AwayTeamId": 4,
+    "HomeTeamGoals": 2,
+    "AwayTeamGoals": 1,
+    "IsMatchPlayed": true,
+    "LeagueId": 1
+  },
+  {
+    "Id": "6",
+    "HomeTeamId": 2,
+    "AwayTeamId": 3,
+    "HomeTeamGoals": 3,
+    "AwayTeamGoals": 0,
+    "IsMatchPlayed": true,
+    "LeagueId": 1
+  }
+]

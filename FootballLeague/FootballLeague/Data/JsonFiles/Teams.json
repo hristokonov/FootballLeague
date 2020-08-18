@@ -1,0 +1,34 @@
+[
+  {
+    "Id": "1",
+    "Name": "Real Madrid",
+    "LeagueId": 1,
+    "GoalsScored": 9,
+    "GoalsConceded": 4,
+    "Points" : 9
+  },
+  {
+    "Id": "2",
+    "Name": "PSG",
+    "LeagueId": 1,
+    "GoalsScored": 8,
+    "GoalsConceded": 5,
+    "Points": 6
+  },
+  {
+    "Id": "3",
+    "Name": "Barcelona",
+    "LeagueId": 1,
+    "GoalsScored": 2,
+    "GoalsConceded": 8,
+    "Points": 1
+  },
+  {
+    "Id": "4",
+    "Name": "Arsenal",
+    "LeagueId": 1,
+    "GoalsScored": 4,
+    "GoalsConceded": 6,
+    "Points": 1
+  }
+]

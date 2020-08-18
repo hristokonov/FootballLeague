@@ -33,7 +33,17 @@ namespace FootballLeague.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Leagues");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Euro League"
+                        });
                 });
 
             modelBuilder.Entity("FootballLeague.Data.Match", b =>
@@ -49,9 +59,6 @@ namespace FootballLeague.Migrations
                     b.Property<int?>("AwayTeamId")
                         .IsRequired()
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("HomeTeamGoals")
                         .HasColumnType("int");
@@ -75,6 +82,68 @@ namespace FootballLeague.Migrations
                     b.HasIndex("LeagueId");
 
                     b.ToTable("Matches");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AwayTeamGoals = 2,
+                            AwayTeamId = 2,
+                            HomeTeamGoals = 3,
+                            HomeTeamId = 1,
+                            IsMatchPlayed = true,
+                            LeagueId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AwayTeamGoals = 1,
+                            AwayTeamId = 4,
+                            HomeTeamGoals = 1,
+                            HomeTeamId = 3,
+                            IsMatchPlayed = true,
+                            LeagueId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AwayTeamGoals = 1,
+                            AwayTeamId = 3,
+                            HomeTeamGoals = 4,
+                            HomeTeamId = 1,
+                            IsMatchPlayed = true,
+                            LeagueId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AwayTeamGoals = 2,
+                            AwayTeamId = 4,
+                            HomeTeamGoals = 3,
+                            HomeTeamId = 2,
+                            IsMatchPlayed = true,
+                            LeagueId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AwayTeamGoals = 1,
+                            AwayTeamId = 4,
+                            HomeTeamGoals = 2,
+                            HomeTeamId = 1,
+                            IsMatchPlayed = true,
+                            LeagueId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AwayTeamGoals = 0,
+                            AwayTeamId = 3,
+                            HomeTeamGoals = 3,
+                            HomeTeamId = 2,
+                            IsMatchPlayed = true,
+                            LeagueId = 1
+                        });
                 });
 
             modelBuilder.Entity("FootballLeague.Data.Team", b =>
@@ -84,14 +153,7 @@ namespace FootballLeague.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<int>("GoalDifference")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GoalsConcede")
+                    b.Property<int>("GoalsConceded")
                         .HasColumnType("int");
 
                     b.Property<int>("GoalsScored")
@@ -111,7 +173,49 @@ namespace FootballLeague.Migrations
 
                     b.HasIndex("LeagueId");
 
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
                     b.ToTable("Teams");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            GoalsConceded = 4,
+                            GoalsScored = 9,
+                            LeagueId = 1,
+                            Name = "Real Madrid",
+                            Points = 9
+                        },
+                        new
+                        {
+                            Id = 2,
+                            GoalsConceded = 5,
+                            GoalsScored = 8,
+                            LeagueId = 1,
+                            Name = "PSG",
+                            Points = 6
+                        },
+                        new
+                        {
+                            Id = 3,
+                            GoalsConceded = 8,
+                            GoalsScored = 2,
+                            LeagueId = 1,
+                            Name = "Barcelona",
+                            Points = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            GoalsConceded = 6,
+                            GoalsScored = 4,
+                            LeagueId = 1,
+                            Name = "Arsenal",
+                            Points = 1
+                        });
                 });
 
             modelBuilder.Entity("FootballLeague.Data.Match", b =>
