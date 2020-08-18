@@ -1,10 +1,9 @@
-﻿using FootballLeague.Bll.Interfaces;
-using FootballLeague.Models.Request;
+﻿using FootballLeague.Models.Request;
+using FootballLeague.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,12 +13,12 @@ namespace FootballLeague.Controllers
     [ApiController]
     public class LeagueController : ControllerBase
     {
-        private readonly ILeagueEngine _leagueEngine;
+        private readonly ILeagueService _leagueService;
         private readonly ILogger _logger;
 
-        public LeagueController(ILeagueEngine leagueEngine, ILogger<LeagueController> logger)
+        public LeagueController(ILeagueService leagueService, ILogger<LeagueController> logger)
         {
-            _leagueEngine = leagueEngine ?? throw new ArgumentNullException(nameof(leagueEngine));
+            _leagueService = leagueService ?? throw new ArgumentNullException(nameof(leagueService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -32,9 +31,23 @@ namespace FootballLeague.Controllers
         {
             _logger.LogInformation("Call made to CreateLeagueAsync.");
 
-            var leagueId = await _leagueEngine.CreateLeagueAsync(leagueModel, cancellationToken);
+            var leagueId = await _leagueService.CreateLeagueAsync(leagueModel, cancellationToken);
 
             return new ObjectResult(leagueId) { StatusCode = StatusCodes.Status201Created };
+        }
+
+        /// <summary>
+        /// Get league table
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<LeagueRequestModel>> GetLeagueTableAsync(int id, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Call made to GetLeagueTableAsync.");
+
+            var leagueModel = await _leagueService.GetLeagueTableAsync(id, cancellationToken);
+
+            return new ObjectResult(leagueModel) { StatusCode = StatusCodes.Status200OK };
         }
     }
 }

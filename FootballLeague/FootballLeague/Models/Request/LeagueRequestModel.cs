@@ -2,6 +2,9 @@
 
 namespace FootballLeague.Models.Request
 {
+    /// <summary>
+    /// Request model for the League
+    /// </summary>
     public class LeagueRequestModel
     {
         /// <summary>

@@ -3,11 +3,26 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FootballLeague.Data
 {
+    /// <summary>
+    /// Entity model for League table
+    /// </summary>
     public class League
     {
+        /// <summary>
+        /// Gets or sets the league unique identifier.
+        /// </summary>
+        /// <value>
+        /// The league unique identifier.
+        /// </value>
         [Key]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Gets or sets the league name.
+        /// </summary>
+        /// <value>
+        /// The league name.
+        /// </value>
         [Required]
         [MaxLength(30)]
         public string Name { get; set; }
