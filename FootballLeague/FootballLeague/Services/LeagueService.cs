@@ -86,7 +86,7 @@ namespace FootballLeague.Services
         }
 
         /// <inheritdoc />
-        public async Task CheckIfLeagueExistById(int leagueId, CancellationToken cancellationToken)
+        public async Task CheckIfLeagueExistByIdAsync(int leagueId, CancellationToken cancellationToken)
         {
             var leagueExists = await _context.Leagues.Where(l => l.Id == leagueId)
                                                    .AnyAsync(cancellationToken);

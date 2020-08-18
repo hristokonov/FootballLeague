@@ -31,7 +31,7 @@ namespace FootballLeague.Services
 
             await CheckIfTeamExistByName(teamModel.Name, cancellationToken);
 
-            await _leagueService.CheckIfLeagueExistById(teamModel.LeagueId, cancellationToken);
+            await _leagueService.CheckIfLeagueExistByIdAsync(teamModel.LeagueId, cancellationToken);
 
 
             var team = new Team
@@ -82,7 +82,7 @@ namespace FootballLeague.Services
         }
 
         /// <inheritdoc />
-        public async Task CheckIfTeamExistInLeague(int teamId, int leagueId, CancellationToken cancellationToken)
+        public async Task CheckIfTeamExistInLeagueAsync(int teamId, int leagueId, CancellationToken cancellationToken)
         {
             var teamExists = await _context.Teams.Where(t => t.Id == teamId && t.LeagueId == leagueId)
                                        .AnyAsync(cancellationToken);

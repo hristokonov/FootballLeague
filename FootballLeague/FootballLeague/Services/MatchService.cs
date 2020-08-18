@@ -30,9 +30,9 @@ namespace FootballLeague.Services
         /// <inheritdoc />
         public async Task<int> CreateMatchAsync(MatchRequestModel matchModel, CancellationToken cancellationToken)
         {
-            await _leagueService.CheckIfLeagueExistById(matchModel.LeagueId, cancellationToken);
-            await _teamService.CheckIfTeamExistInLeague(matchModel.HomeTeamId, matchModel.LeagueId, cancellationToken);
-            await _teamService.CheckIfTeamExistInLeague(matchModel.AwayTeamId, matchModel.LeagueId, cancellationToken);
+            await _leagueService.CheckIfLeagueExistByIdAsync(matchModel.LeagueId, cancellationToken);
+            await _teamService.CheckIfTeamExistInLeagueAsync(matchModel.HomeTeamId, matchModel.LeagueId, cancellationToken);
+            await _teamService.CheckIfTeamExistInLeagueAsync(matchModel.AwayTeamId, matchModel.LeagueId, cancellationToken);
 
             var match = new Match()
             {
