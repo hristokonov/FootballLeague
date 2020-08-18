@@ -1,17 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FootballLeague.Bll;
+using FootballLeague.Bll.Interfaces;
+using FootballLeague.Dal;
+using FootballLeague.Dal.Interfaces;
 using FootballLeague.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace FootballLeague
 {
@@ -28,8 +25,13 @@ namespace FootballLeague
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<FootballLeagueDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionHristo")));
+                                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionHristo")));
             services.AddControllers();
+
+            // Add application services.
+            services.AddScoped<ITeamEngine, TeamEngine>();
+            services.AddScoped<ILeagueEngine, LeagueEngine>();
+            services.AddScoped<ILeagueStore, LeagueStore>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

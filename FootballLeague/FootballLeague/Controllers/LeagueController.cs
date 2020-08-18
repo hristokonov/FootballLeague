@@ -1,44 +1,40 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FootballLeague.Bll.Interfaces;
+using FootballLeague.Models.Request;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FootballLeague.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class LeagueController : ControllerBase
     {
-        // GET: api/<LeagueController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly ILeagueEngine _leagueEngine;
+        private readonly ILogger _logger;
+
+        public LeagueController(ILeagueEngine leagueEngine, ILogger<LeagueController> logger)
         {
-            return new string[] { "value1", "value2" };
+            _leagueEngine = leagueEngine ?? throw new ArgumentNullException(nameof(leagueEngine));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        // GET api/<LeagueController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<LeagueController>
+        /// <summary>
+        /// Create a league
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> CreateLeagueAsync(LeagueRequestModel leagueModel, CancellationToken cancellationToken)
         {
-        }
+            _logger.LogInformation("Call made to CreateLeagueAsync.");
 
-        // PUT api/<LeagueController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+            var leagueId = await _leagueEngine.CreateLeagueAsync(leagueModel, cancellationToken);
 
-        // DELETE api/<LeagueController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return new ObjectResult(leagueId) { StatusCode = StatusCodes.Status201Created };
         }
     }
 }
