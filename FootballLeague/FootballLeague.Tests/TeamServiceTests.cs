@@ -56,8 +56,8 @@ namespace FootballLeague.Tests
 
                 var res = await sut.CreateTeamAsync(teamModel, CToken);
 
-                Assert.AreEqual(res, 1);
-                Assert.AreEqual(assertContex.Teams.Count(), 1);
+                Assert.AreEqual(1, res);
+                Assert.AreEqual(1, assertContex.Teams.Count());
             }
         }
 
@@ -130,7 +130,7 @@ namespace FootballLeague.Tests
 
                 await sut.DeleteTeamAsync(teamId, CToken);
 
-                Assert.AreEqual(assertContex.Teams.Count(), 0);
+                Assert.AreEqual(0, assertContex.Teams.Count());
             }
         }
 
@@ -165,7 +165,7 @@ namespace FootballLeague.Tests
                 var ex = await Assert.ThrowsExceptionAsync<EntityNotFoundException>(
                   async () => await sut.DeleteTeamAsync(teamId, CToken));
 
-                Assert.AreEqual(assertContex.Teams.Count(), 1);
+                Assert.AreEqual(1, assertContex.Teams.Count());
             }
         }
 
@@ -206,14 +206,14 @@ namespace FootballLeague.Tests
 
                 var res = await sut.GetTeamDetailsAsync(teamId, CToken);
 
-                Assert.AreEqual(res.Name, team.Name);
-                Assert.AreEqual(res.Id, team.Id);
-                Assert.AreEqual(res.LeagueName, league.Name);
-                Assert.AreEqual(res.Points, team.Points);
-                Assert.AreEqual(res.GoalsScored, team.GoalsScored);
-                Assert.AreEqual(res.GoalsConceded, team.GoalsConceded);
-                Assert.AreEqual(res.GoalDifference, team.GoalsScored - team.GoalsConceded);
-                Assert.AreEqual(res.MatchesPlayed, 0);
+                Assert.AreEqual(team.Name, res.Name);
+                Assert.AreEqual(team.Id, res.Id);
+                Assert.AreEqual(league.Name, res.LeagueName);
+                Assert.AreEqual(team.Points, res.Points);
+                Assert.AreEqual(team.GoalsScored, res.GoalsScored);
+                Assert.AreEqual(team.GoalsConceded, res.GoalsConceded);
+                Assert.AreEqual(team.GoalsScored - team.GoalsConceded, res.GoalDifference);
+                Assert.AreEqual(0, res.MatchesPlayed);
             }
         }
 
@@ -273,9 +273,9 @@ namespace FootballLeague.Tests
 
                 await sut.CheckIfTeamExistInLeagueAsync(teamId, leagueId, CToken);
 
-                Assert.AreEqual(assertContex.Teams.Count(), 1);
-                Assert.AreEqual(assertContex.Teams.FirstOrDefault().Id, teamId);
-                Assert.AreEqual(assertContex.Teams.FirstOrDefault().LeagueId, leagueId);
+                Assert.AreEqual(1, assertContex.Teams.Count());
+                Assert.AreEqual(teamId, assertContex.Teams.FirstOrDefault().Id);
+                Assert.AreEqual(leagueId, assertContex.Teams.FirstOrDefault().LeagueId);
             }
         }
 

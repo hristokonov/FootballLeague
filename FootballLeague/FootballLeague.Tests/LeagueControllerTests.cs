@@ -40,7 +40,7 @@ namespace FootballLeague.Tests
             var objectResult = result as ObjectResult;
 
             //Assert
-            Assert.AreEqual(objectResult.StatusCode, StatusCodes.Status201Created);
+            Assert.AreEqual(StatusCodes.Status201Created, objectResult.StatusCode);
             _mockLeagueService.Verify();
         }
 
