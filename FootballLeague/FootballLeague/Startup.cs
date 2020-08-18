@@ -1,8 +1,7 @@
-using FootballLeague.Bll;
-using FootballLeague.Bll.Interfaces;
-using FootballLeague.Dal;
-using FootballLeague.Dal.Interfaces;
 using FootballLeague.Data;
+using FootballLeague.Services;
+using FootballLeague.Services.Interfaces;
+using FootballLeague.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -27,11 +26,12 @@ namespace FootballLeague
             services.AddDbContext<FootballLeagueDbContext>(options =>
                                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionHristo")));
             services.AddControllers();
+            services.AddMemoryCache();
 
             // Add application services.
-            services.AddScoped<ITeamEngine, TeamEngine>();
-            services.AddScoped<ILeagueEngine, LeagueEngine>();
-            services.AddScoped<ILeagueStore, LeagueStore>();
+            services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<IMatchService, MatchService>();
+            services.AddScoped<ILeagueService, LeagueService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +41,8 @@ namespace FootballLeague
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCustomExceptionHandler();
 
             app.UseHttpsRedirection();
 
