@@ -1,4 +1,5 @@
 ﻿using FootballLeague.Models.Request;
+using FootballLeague.Models.Response;
 using FootballLeague.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +42,7 @@ namespace FootballLeague.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<LeagueRequestModel>> GetLeagueTableAsync(int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<LeagueResponseModel>> GetLeagueTableAsync(int id, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Call made to GetLeagueTableAsync.");
 
