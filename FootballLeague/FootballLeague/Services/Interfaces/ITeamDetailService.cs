@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace FootballLeague.Services.Interfaces
 {
-    public interface ITeamDetailsService
+    public interface ITeamDetailService
     {
         /// <summary>
         /// Get team details.

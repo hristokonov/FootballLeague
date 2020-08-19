@@ -16,18 +16,25 @@ namespace FootballLeague.Tests
     [TestClass]
     public class LeagueControllerTests
     {
-        private static readonly CancellationToken CToken = CancellationToken.None;
-        private static readonly Fixture _fixture = new Fixture();
+        private Mock<ILeagueService> _mockLeagueService;
+        private Mock<ILogger<LeagueController>> _mockLogger;
+        private LeagueController _leagueController;
+        private static Fixture _fixture;
+        private readonly CancellationToken CToken = CancellationToken.None;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _mockLeagueService = new Mock<ILeagueService>();
+            _mockLogger = new Mock<ILogger<LeagueController>>();
+            _fixture = new Fixture();
+            _leagueController = new LeagueController(_mockLeagueService.Object, _mockLogger.Object);
+        }
 
         [TestMethod]
         public async Task CreateLeague_ReturnStatusCodeCreated()
         {
             //Arrange
-            var _mockLeagueService = new Mock<ILeagueService>();
-            var logger = new Mock<ILogger<LeagueController>>();
-         
-            var controller = new LeagueController(_mockLeagueService.Object, logger.Object);
-
             var leagueId = _fixture.Create<int>();
             var leagueModel = _fixture.Create<LeagueRequestModel>();
 
@@ -36,7 +43,7 @@ namespace FootballLeague.Tests
                 .Verifiable();
 
             //Act
-            var result = await controller.CreateLeague(leagueModel, CToken);
+            var result = await _leagueController.CreateLeague(leagueModel, CToken);
             var objectResult = result as ObjectResult;
 
             //Assert
@@ -48,11 +55,6 @@ namespace FootballLeague.Tests
         public async Task GetLeagueTable_ReturnStatusCodeOk()
         {
             //Arrange
-            var _mockLeagueService = new Mock<ILeagueService>();
-            var logger = new Mock<ILogger<LeagueController>>();
-
-            var controller = new LeagueController(_mockLeagueService.Object, logger.Object);
-
             var leagueId = _fixture.Create<int>();
             var leagueModel = _fixture.Create<LeagueResponseModel>();
 
@@ -61,8 +63,8 @@ namespace FootballLeague.Tests
                 .Verifiable();
 
             //Act
-            var result = await controller.GetLeagueTable(leagueId, CToken);
-            
+            var result = await _leagueController.GetLeagueTable(leagueId, CToken);
+
             //Assert
             Assert.IsInstanceOfType(result, typeof(ActionResult<LeagueResponseModel>));
             _mockLeagueService.Verify();

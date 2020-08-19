@@ -3,8 +3,10 @@ using FootballLeague.CustomExceptions;
 using FootballLeague.Data;
 using FootballLeague.Data.Models;
 using FootballLeague.Models.Request;
+using FootballLeague.Models.Response;
 using FootballLeague.Services;
 using FootballLeague.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Linq;
@@ -16,16 +18,28 @@ namespace FootballLeague.Tests
     [TestClass]
     public class TeamServiceTests
     {
-        private static readonly CancellationToken CToken = CancellationToken.None;
-        private static readonly Fixture _fixture = new Fixture();
+        private Mock<ILeagueService> _mockLeagueService;
+        private Mock<ITeamDetailService> _mockTeamDetailService;
+        private static DbContextOptions<FootballLeagueDbContext> _options;
+
+        private static Fixture _fixture;
+        private readonly CancellationToken CToken = CancellationToken.None;
+       
+        public TestContext TestContext { get; set; }
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _mockLeagueService = new Mock<ILeagueService>();
+            _mockTeamDetailService = new Mock<ITeamDetailService>();
+            _fixture = new Fixture();
+            _options = TestUtils.GetOptions(TestContext.TestName);
+        }
 
         [TestMethod]
         public async Task CreateTeamAsync_ReturnsId_WhenEverythingIsOk()
         {
-            //arrange
-            var _mockLeagueService = new Mock<ILeagueService>();
-            var options = TestUtils.GetOptions(nameof(CreateTeamAsync_ReturnsId_WhenEverythingIsOk));
-
+            //Arrange
             var name = _fixture.Create<string>();
             var leagueId = _fixture.Create<int>();
 
@@ -43,16 +57,16 @@ namespace FootballLeague.Tests
 
             _mockLeagueService.Setup(l => l.ValidateLeagueExistAsync(leagueId, CToken)).Returns(Task.CompletedTask);
 
-            using (var arrangeContext = new FootballLeagueDbContext(options))
+            using (var arrangeContext = new FootballLeagueDbContext(_options))
             {
                 arrangeContext.Leagues.Add(league);
                 await arrangeContext.SaveChangesAsync();
             }
 
-            //act,assert
-            using (var assertContex = new FootballLeagueDbContext(options))
+            //Act,Assert
+            using (var assertContex = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
 
                 var res = await sut.CreateTeamAsync(teamModel, CToken);
 
@@ -64,10 +78,7 @@ namespace FootballLeague.Tests
         [TestMethod]
         public async Task CreateTeamAsync_ThrowsException_WhenTeamExists()
         {
-            //arrange
-            var _mockLeagueService = new Mock<ILeagueService>();
-            var options = TestUtils.GetOptions(nameof(CreateTeamAsync_ThrowsException_WhenTeamExists));
-
+            //Arrange
             var name = _fixture.Create<string>();
             var leagueId = _fixture.Create<int>();
 
@@ -84,16 +95,16 @@ namespace FootballLeague.Tests
                  .Without(t => t.League)
                  .Create();
 
-            using (var arrangeContext = new FootballLeagueDbContext(options))
+            using (var arrangeContext = new FootballLeagueDbContext(_options))
             {
                 arrangeContext.Teams.Add(team);
                 await arrangeContext.SaveChangesAsync();
             }
 
-            //act,assert
-            using (var assertContex = new FootballLeagueDbContext(options))
+            //Act,Assert
+            using (var assertContex = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
 
                 var ex = await Assert.ThrowsExceptionAsync<EntityAlreadyExistsException>(
                   async () => await sut.CreateTeamAsync(teamModel, CToken));
@@ -103,10 +114,7 @@ namespace FootballLeague.Tests
         [TestMethod]
         public async Task DeleteTeamAsync_DeletesTeam_WhenEverythingIsOk()
         {
-            //arrange
-            var _mockLeagueService = new Mock<ILeagueService>();
-            var options = TestUtils.GetOptions(nameof(DeleteTeamAsync_DeletesTeam_WhenEverythingIsOk));
-
+            //Arrange
             var teamId = _fixture.Create<int>();
             var leagueId = _fixture.Create<int>();
 
@@ -117,16 +125,16 @@ namespace FootballLeague.Tests
                  .Without(t => t.League)
                  .Create();
 
-            using (var arrangeContext = new FootballLeagueDbContext(options))
+            using (var arrangeContext = new FootballLeagueDbContext(_options))
             {
                 arrangeContext.Teams.Add(team);
                 await arrangeContext.SaveChangesAsync();
             }
 
-            //act,assert
-            using (var assertContex = new FootballLeagueDbContext(options))
+            //Act,Assert
+            using (var assertContex = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
 
                 await sut.DeleteTeamAsync(teamId, CToken);
 
@@ -137,10 +145,7 @@ namespace FootballLeague.Tests
         [TestMethod]
         public async Task DeleteTeamAsync_ThrowsException_WhenTeamIsNotFound()
         {
-            //arrange
-            var _mockLeagueService = new Mock<ILeagueService>();
-            var options = TestUtils.GetOptions(nameof(DeleteTeamAsync_ThrowsException_WhenTeamIsNotFound));
-
+            //Arrange
             var teamId = _fixture.Create<int>();
             var leagueId = _fixture.Create<int>();
 
@@ -151,16 +156,16 @@ namespace FootballLeague.Tests
                  .Without(t => t.League)
                  .Create();
 
-            using (var arrangeContext = new FootballLeagueDbContext(options))
+            using (var arrangeContext = new FootballLeagueDbContext(_options))
             {
                 arrangeContext.Teams.Add(team);
                 await arrangeContext.SaveChangesAsync();
             }
 
-            //act,assert
-            using (var assertContex = new FootballLeagueDbContext(options))
+            //Act,Assert
+            using (var assertContex = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
 
                 var ex = await Assert.ThrowsExceptionAsync<EntityNotFoundException>(
                   async () => await sut.DeleteTeamAsync(teamId, CToken));
@@ -172,77 +177,34 @@ namespace FootballLeague.Tests
         [TestMethod]
         public async Task GetTeamDetailsAsync_ReturnTeamResponseModel()
         {
-            //arrange
-            var _mockLeagueService = new Mock<ILeagueService>();
-            var options = TestUtils.GetOptions(nameof(GetTeamDetailsAsync_ReturnTeamResponseModel));
-
+            //Arrange
             var teamId = _fixture.Create<int>();
-            var leagueId = _fixture.Create<int>();
 
-            var league = _fixture.Build<League>()
-                .With(l => l.Id, leagueId)
-                .Without(l => l.Teams)
-                .Without(l => l.Matches)
-                .Create();
-
-            var team = _fixture.Build<Team>()
+            var team = _fixture.Build<TeamResponseModel>()
                  .With(t => t.Id, teamId)
-                 .With(t => t.League, league)
-                 .Without(t => t.HomeMatches)
-                 .Without(t => t.AwayMatches)
                  .Create();
 
-            using (var arrangeContext = new FootballLeagueDbContext(options))
-            {
-                arrangeContext.Leagues.Add(league);
-                arrangeContext.Teams.Add(team);
-                await arrangeContext.SaveChangesAsync();
-            }
+            _mockTeamDetailService.Setup(t => t.GetTeamDetailsAsync(teamId, CToken)).ReturnsAsync(team);
 
-            //act,assert
-            using (var assertContex = new FootballLeagueDbContext(options))
+            //Act,Assert
+            using (var assertContex = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
 
                 var res = await sut.GetTeamDetailsAsync(teamId, CToken);
 
                 Assert.AreEqual(team.Name, res.Name);
                 Assert.AreEqual(team.Id, res.Id);
-                Assert.AreEqual(league.Name, res.LeagueName);
                 Assert.AreEqual(team.Points, res.Points);
                 Assert.AreEqual(team.GoalsScored, res.GoalsScored);
                 Assert.AreEqual(team.GoalsConceded, res.GoalsConceded);
-                Assert.AreEqual(team.GoalsScored - team.GoalsConceded, res.GoalDifference);
-                Assert.AreEqual(0, res.MatchesPlayed);
-            }
-        }
-
-        [TestMethod]
-        public async Task GetTeamDetailsAsync_ThrowsException_WhenTeamDoesNotExist()
-        {
-            //arrange
-            var _mockLeagueService = new Mock<ILeagueService>();
-            var options = TestUtils.GetOptions(nameof(GetTeamDetailsAsync_ThrowsException_WhenTeamDoesNotExist));
-
-            var teamId = _fixture.Create<int>();
-
-            //act,assert
-            using (var assertContex = new FootballLeagueDbContext(options))
-            {
-                var sut = new TeamService(_mockLeagueService.Object, assertContex);
-
-                var ex = await Assert.ThrowsExceptionAsync<EntityNotFoundException>(
-                  async () => await sut.GetTeamDetailsAsync(teamId, CToken));
             }
         }
 
         [TestMethod]
         public async Task CheckIfTeamExistInLeagueAsync_WorksCorrectly_WhenTeamExist()
         {
-            //arrange
-            var _mockLeagueService = new Mock<ILeagueService>();
-            var options = TestUtils.GetOptions(nameof(CheckIfTeamExistInLeagueAsync_WorksCorrectly_WhenTeamExist));
-
+            //Arrange
             var teamId = _fixture.Create<int>();
             var leagueId = _fixture.Create<int>();
 
@@ -259,17 +221,17 @@ namespace FootballLeague.Tests
                  .Without(t => t.AwayMatches)
                  .Create();
 
-            using (var arrangeContext = new FootballLeagueDbContext(options))
+            using (var arrangeContext = new FootballLeagueDbContext(_options))
             {
                 arrangeContext.Leagues.Add(league);
                 arrangeContext.Teams.Add(team);
                 await arrangeContext.SaveChangesAsync();
             }
 
-            //act,assert
-            using (var assertContex = new FootballLeagueDbContext(options))
+            //Act,Assert
+            using (var assertContex = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
 
                 await sut.ValidateTeamExistInLeagueAsync(teamId, leagueId, CToken);
 
@@ -282,17 +244,14 @@ namespace FootballLeague.Tests
         [TestMethod]
         public async Task CheckIfTeamExistInLeagueAsync_ThrowsException_WhenTeamDoesNotExist()
         {
-            //arrange
-            var _mockLeagueService = new Mock<ILeagueService>();
-            var options = TestUtils.GetOptions(nameof(CheckIfTeamExistInLeagueAsync_ThrowsException_WhenTeamDoesNotExist));
-
+            //Arrange
             var teamId = _fixture.Create<int>();
             var leagueId = _fixture.Create<int>();
 
-            //act,assert
-            using (var assertContex = new FootballLeagueDbContext(options))
+            //Act,Assert
+            using (var assertContex = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
 
                 var ex = await Assert.ThrowsExceptionAsync<EntityNotFoundException>(
                   async () => await sut.ValidateTeamExistInLeagueAsync(teamId, leagueId, CToken));

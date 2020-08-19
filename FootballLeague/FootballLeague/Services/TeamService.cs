@@ -15,10 +15,10 @@ namespace FootballLeague.Services
     public class TeamService : ITeamService
     {
         private readonly ILeagueService _leagueService;
-        private readonly ITeamDetailsService _teamDetailsService;
+        private readonly ITeamDetailService _teamDetailsService;
         private readonly FootballLeagueDbContext _context;
 
-        public TeamService(ILeagueService leagueService, ITeamDetailsService teamDetailsService, FootballLeagueDbContext context)
+        public TeamService(ILeagueService leagueService, ITeamDetailService teamDetailsService, FootballLeagueDbContext context)
         {
             _leagueService = leagueService;
             _context = context;

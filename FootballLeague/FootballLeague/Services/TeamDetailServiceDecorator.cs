@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FootballLeague.Services
 {
-    public class TeamDetailServiceDecorator : ITeamDetailsService
+    public class TeamDetailServiceDecorator : ITeamDetailService
     {
         private readonly TeamDetailService _teamDetailService;
         private readonly IMemoryCache _cache;

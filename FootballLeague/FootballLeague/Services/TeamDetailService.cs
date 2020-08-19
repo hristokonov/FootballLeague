@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FootballLeague.Services
 {
-    public class TeamDetailService : ITeamDetailsService
+    public class TeamDetailService : ITeamDetailService
     {
         private readonly FootballLeagueDbContext _context;
 
