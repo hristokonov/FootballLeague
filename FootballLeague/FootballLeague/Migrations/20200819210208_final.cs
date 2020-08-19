@@ -2,7 +2,7 @@
 
 namespace FootballLeague.Migrations
 {
-    public partial class Completed : Migration
+    public partial class final : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

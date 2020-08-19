@@ -42,7 +42,6 @@ namespace FootballLeague.Services
             };
 
             _context.Matches.Add(match);
-
             await _context.SaveChangesAsync(cancellationToken);
 
             return match.Id;
@@ -57,28 +56,10 @@ namespace FootballLeague.Services
 
             if (match.IsMatchPlayed)
             {
-                match.HomeTeam.GoalsScored -= match.HomeTeamGoals;
-                match.HomeTeam.GoalsConceded -= match.AwayTeamGoals;
-                match.AwayTeam.GoalsScored -= match.AwayTeamGoals;
-                match.AwayTeam.GoalsConceded -= match.HomeTeamGoals;
-
-                if (match.HomeTeamGoals > match.AwayTeamGoals)
-                {
-                    match.HomeTeam.Points -= 3;
-                }
-                else if (match.HomeTeamGoals < match.AwayTeamGoals)
-                {
-                    match.AwayTeam.Points -= 3;
-                }
-                else
-                {
-                    match.HomeTeam.Points -= 1;
-                    match.AwayTeam.Points -= 1;
-                }
+                RemoveMatchStatsFromTeams(match);
             }
 
             _context.Matches.Remove(match);
-
             await _context.SaveChangesAsync(cancellationToken);
         }
 
@@ -139,6 +120,14 @@ namespace FootballLeague.Services
                 throw new MatchAlreadyPlayedException(string.Format(ErrorMessages.MatchIsPlayed, match.Id, match.HomeTeam.Name, match.AwayTeam.Name));
             }
 
+            AssignMatchStats(match, matchModel);
+
+            _context.Matches.Update(match);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        private void AssignMatchStats(Match match, MatchRequestModel matchModel)
+        {
             match.HomeTeamGoals = matchModel.HomeTeamGoals;
             match.AwayTeamGoals = matchModel.AwayTeamGoals;
             match.IsMatchPlayed = true;
@@ -160,10 +149,28 @@ namespace FootballLeague.Services
                 match.HomeTeam.Points += 1;
                 match.AwayTeam.Points += 1;
             }
+        }
 
-            _context.Matches.Update(match);
+        private void RemoveMatchStatsFromTeams(Match match)
+        {
+            match.HomeTeam.GoalsScored -= match.HomeTeamGoals;
+            match.HomeTeam.GoalsConceded -= match.AwayTeamGoals;
+            match.AwayTeam.GoalsScored -= match.AwayTeamGoals;
+            match.AwayTeam.GoalsConceded -= match.HomeTeamGoals;
 
-            await _context.SaveChangesAsync(cancellationToken);
+            if (match.HomeTeamGoals > match.AwayTeamGoals)
+            {
+                match.HomeTeam.Points -= 3;
+            }
+            else if (match.HomeTeamGoals < match.AwayTeamGoals)
+            {
+                match.AwayTeam.Points -= 3;
+            }
+            else
+            {
+                match.HomeTeam.Points -= 1;
+                match.AwayTeam.Points -= 1;
+            }
         }
 
         private async Task<Match> GetMatchAsync(int id, CancellationToken cancellationToken)

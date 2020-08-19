@@ -39,7 +39,6 @@ namespace FootballLeague.Services
             var league = new League { Name = leagueModel.Name };
 
             _context.Leagues.Add(league);
-
             await _context.SaveChangesAsync(cancellationToken);
 
             return league.Id;
@@ -90,7 +89,7 @@ namespace FootballLeague.Services
             cancellationToken.ThrowIfCancellationRequested();
 
             var leagueExists = await _context.Leagues.Where(l => l.Id == id)
-                                                   .AnyAsync(cancellationToken);
+                                                     .AnyAsync(cancellationToken);
 
             if (!leagueExists)
             {

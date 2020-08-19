@@ -13,7 +13,6 @@ namespace FootballLeague.Data.Models
         /// <value>
         /// The match unique identifier.
         /// </value>
-        [Key]
         public int Id { get; set; }
 
         /// <summary>

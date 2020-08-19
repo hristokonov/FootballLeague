@@ -33,7 +33,6 @@ namespace FootballLeague.Services
             await ValidateTeamExist(teamModel.Name, cancellationToken);
             await _leagueService.ValidateLeagueExistAsync(teamModel.LeagueId, cancellationToken);
 
-
             var team = new Team
             {
                 Name = teamModel.Name,
@@ -41,7 +40,6 @@ namespace FootballLeague.Services
             };
 
             _context.Teams.Add(team);
-
             await _context.SaveChangesAsync(cancellationToken);
 
             return team.Id;
@@ -55,7 +53,6 @@ namespace FootballLeague.Services
             var team = await GetTeamAsync(teamId, cancellationToken);
 
             _context.Teams.Remove(team);
-
             await _context.SaveChangesAsync(cancellationToken);
         }
 

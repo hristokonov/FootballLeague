@@ -14,7 +14,6 @@ namespace FootballLeague.Data.Models
         /// <value>
         /// The team unique identifier.
         /// </value>
-        [Key]
         public int Id { get; set; }
 
         /// <summary>

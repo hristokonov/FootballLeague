@@ -19,7 +19,7 @@ namespace FootballLeague.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("FootballLeague.Data.League", b =>
+            modelBuilder.Entity("FootballLeague.Data.Models.League", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,7 +46,7 @@ namespace FootballLeague.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FootballLeague.Data.Match", b =>
+            modelBuilder.Entity("FootballLeague.Data.Models.Match", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -146,7 +146,7 @@ namespace FootballLeague.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FootballLeague.Data.Team", b =>
+            modelBuilder.Entity("FootballLeague.Data.Models.Team", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -218,30 +218,30 @@ namespace FootballLeague.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FootballLeague.Data.Match", b =>
+            modelBuilder.Entity("FootballLeague.Data.Models.Match", b =>
                 {
-                    b.HasOne("FootballLeague.Data.Team", "AwayTeam")
+                    b.HasOne("FootballLeague.Data.Models.Team", "AwayTeam")
                         .WithMany("AwayMatches")
                         .HasForeignKey("AwayTeamId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FootballLeague.Data.Team", "HomeTeam")
+                    b.HasOne("FootballLeague.Data.Models.Team", "HomeTeam")
                         .WithMany("HomeMatches")
                         .HasForeignKey("HomeTeamId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FootballLeague.Data.League", "League")
+                    b.HasOne("FootballLeague.Data.Models.League", "League")
                         .WithMany("Matches")
                         .HasForeignKey("LeagueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FootballLeague.Data.Team", b =>
+            modelBuilder.Entity("FootballLeague.Data.Models.Team", b =>
                 {
-                    b.HasOne("FootballLeague.Data.League", "League")
+                    b.HasOne("FootballLeague.Data.Models.League", "League")
                         .WithMany("Teams")
                         .HasForeignKey("LeagueId");
                 });
