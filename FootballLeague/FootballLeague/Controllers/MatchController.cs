@@ -4,7 +4,6 @@ using FootballLeague.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,8 +19,8 @@ namespace FootballLeague.Controllers
 
         public MatchController(IMatchService matchService, ILogger<TeamController> logger)
         {
-            _matchService = matchService ?? throw new ArgumentNullException(nameof(matchService));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _matchService = matchService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -29,9 +28,9 @@ namespace FootballLeague.Controllers
         /// </summary>
         /// <returns>The task.</returns>
         [HttpPost]
-        public async Task<ActionResult> CreateMatchAsync(MatchRequestModel matchModel, CancellationToken cancellationToken)
+        public async Task<ActionResult> CreateMatch(MatchRequestModel matchModel, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Call made to CreateTeamAsync.");
+            _logger.LogInformation("Call made to CreateMatch.");
 
             var matchId = await _matchService.CreateMatchAsync(matchModel, cancellationToken);
 
@@ -43,9 +42,9 @@ namespace FootballLeague.Controllers
         /// </summary>
         /// <returns>The task.</returns>
         [HttpPut]
-        public async Task<ActionResult> PlayMatchAsync(MatchRequestModel matchModel, CancellationToken cancellationToken)
+        public async Task<ActionResult> PlayMatch(MatchRequestModel matchModel, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Call made to PlayMatchAsync.");
+            _logger.LogInformation("Call made to PlayMatch.");
 
             await _matchService.PlayMatchAsync(matchModel, cancellationToken);
 
@@ -57,13 +56,13 @@ namespace FootballLeague.Controllers
         /// </summary>
         /// <returns>The task.</returns>
         [HttpGet]
-        public async Task<ActionResult<ICollection<MatchResponseModel>>> GetAllMatchesAsync(CancellationToken cancellationToken)
+        public async Task<ActionResult<ICollection<MatchResponseModel>>> GetAllMatches(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Call made to GetAllMatchesAsync.");
+            _logger.LogInformation("Call made to GetAllMatches.");
 
             var matches = await _matchService.GetAllMatchesAsync(cancellationToken);
 
-            return new ObjectResult(matches) { StatusCode = StatusCodes.Status200OK };
+            return Ok(matches);
         }
 
         /// <summary>
@@ -71,13 +70,13 @@ namespace FootballLeague.Controllers
         /// </summary>
         /// <returns>The task.</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<MatchResponseModel>>> GetAllTeamMatchesAsync(int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<MatchResponseModel>>> GetAllTeamMatches(int id, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Call made to GetAllTeamMatchesAsync.");
+            _logger.LogInformation("Call made to GetAllTeamMatches.");
 
             var matches = await _matchService.GetAllTeamMatchesAsync(id, cancellationToken);
 
-            return new ObjectResult(matches) { StatusCode = StatusCodes.Status200OK };
+            return Ok(matches);
         }
 
         /// <summary>
@@ -85,9 +84,9 @@ namespace FootballLeague.Controllers
         /// </summary>
         /// <returns>The task.</returns>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteMatchAsync(int id, CancellationToken cancellationToken)
+        public async Task<ActionResult> DeleteMatch(int id, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Call made to DeleteTeamAsync.");
+            _logger.LogInformation("Call made to DeleteMatch.");
 
             await _matchService.DeleteMatchAsync(id, cancellationToken);
 

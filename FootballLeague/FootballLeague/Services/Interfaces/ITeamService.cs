@@ -38,6 +38,6 @@ namespace FootballLeague.Services.Interfaces
         /// <param name="leagueId">The league id.</param>
         /// <param name="cancellationToken">The cancellationToken.</param>
         /// <returns></returns>
-        Task CheckIfTeamExistInLeagueAsync(int teamId, int leagueId, CancellationToken cancellationToken);
+        Task ValidateTeamExistInLeagueAsync(int teamId, int leagueId, CancellationToken cancellationToken);
     }
 }

@@ -28,7 +28,7 @@ namespace FootballLeague.Utilities.Middlewares
             {
                 _logger.LogError($"{ex.Message}");
                 context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 await context.Response.WriteAsync(ex.Message);
             }
             catch (EntityNotFoundException ex)
@@ -42,7 +42,7 @@ namespace FootballLeague.Utilities.Middlewares
             {
                 _logger.LogError($"{ex.Message}");
                 context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 await context.Response.WriteAsync(ex.Message);
             }
             catch (Exception ex)

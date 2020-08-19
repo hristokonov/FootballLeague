@@ -4,7 +4,6 @@ using FootballLeague.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,8 +18,8 @@ namespace FootballLeague.Controllers
 
         public LeagueController(ILeagueService leagueService, ILogger<LeagueController> logger)
         {
-            _leagueService = leagueService ?? throw new ArgumentNullException(nameof(leagueService));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _leagueService = leagueService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -28,9 +27,9 @@ namespace FootballLeague.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> CreateLeagueAsync(LeagueRequestModel leagueModel, CancellationToken cancellationToken)
+        public async Task<ActionResult> CreateLeague(LeagueRequestModel leagueModel, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Call made to CreateLeagueAsync.");
+            _logger.LogInformation("Call made to CreateLeague.");
 
             var leagueId = await _leagueService.CreateLeagueAsync(leagueModel, cancellationToken);
 
@@ -42,13 +41,13 @@ namespace FootballLeague.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<LeagueResponseModel>> GetLeagueTableAsync(int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<LeagueResponseModel>> GetLeagueTable(int id, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Call made to GetLeagueTableAsync.");
+            _logger.LogInformation("Call made to GetLeagueTable.");
 
             var leagueModel = await _leagueService.GetLeagueTableAsync(id, cancellationToken);
 
-            return new ObjectResult(leagueModel) { StatusCode = StatusCodes.Status200OK };
+            return Ok(leagueModel); ;
         }
     }
 }

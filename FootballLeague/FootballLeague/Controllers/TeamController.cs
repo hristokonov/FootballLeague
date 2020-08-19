@@ -3,9 +3,7 @@ using FootballLeague.Models.Response;
 using FootballLeague.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,13 +18,11 @@ namespace FootballLeague.Controllers
     {
         private readonly ITeamService _teamService;
         private readonly ILogger _logger;
-        private readonly IMemoryCache _cache;
 
-        public TeamController(ITeamService teamService, ILogger<TeamController> logger, IMemoryCache cache)
+        public TeamController(ITeamService teamService, ILogger<TeamController> logger)
         {
-            _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+            _teamService = teamService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -34,9 +30,9 @@ namespace FootballLeague.Controllers
         /// </summary>
         /// <returns>The task.</returns>
         [HttpPost]
-        public async Task<ActionResult> CreateTeamAsync(TeamRequestModel teamModel, CancellationToken cancellationToken)
+        public async Task<ActionResult> CreateTeam(TeamRequestModel teamModel, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Call made to CreateTeamAsync.");
+            _logger.LogInformation("Call made to CreateTeam.");
 
             var teamId = await _teamService.CreateTeamAsync(teamModel, cancellationToken);
 
@@ -48,9 +44,9 @@ namespace FootballLeague.Controllers
         /// </summary>
         /// <returns>The task.</returns>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteTeamAsync(int id, CancellationToken cancellationToken)
+        public async Task<ActionResult> DeleteTeam(int id, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Call made to DeleteTeamAsync.");
+            _logger.LogInformation("Call made to DeleteTeam.");
 
             await _teamService.DeleteTeamAsync(id, cancellationToken);
 
@@ -62,25 +58,13 @@ namespace FootballLeague.Controllers
         /// </summary>
         /// <returns>The task.</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<TeamResponseModel>> GetTeamDetailsAsync(int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<TeamResponseModel>> GetTeamDetails(int id, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Call made to GetTeamAsync.");
+            _logger.LogInformation("Call made to GetTeamDetails.");
 
-            var teamDetails = await CacheDetailsResponse(id, cancellationToken);
+            var teamDetails = await _teamService.GetTeamDetailsAsync(id, cancellationToken);
 
-            return teamDetails;
-        }
-
-        private async Task<TeamResponseModel> CacheDetailsResponse(int id, CancellationToken cancellationToken)
-        {
-            var cashedResponse = await _cache.GetOrCreateAsync<TeamResponseModel>("TeamResponse", async (cacheEntry) =>
-            {
-                cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(2);
-                var response = await _teamService.GetTeamDetailsAsync(id, cancellationToken);
-                return response;
-            });
-
-            return cashedResponse;
+            return Ok(teamDetails);
         }
     }
 }

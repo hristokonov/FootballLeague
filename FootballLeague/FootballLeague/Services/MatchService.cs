@@ -1,16 +1,15 @@
 ﻿using FootballLeague.Constants;
 using FootballLeague.CustomExceptions;
 using FootballLeague.Data;
+using FootballLeague.Data.Models;
 using FootballLeague.Models.Request;
 using FootballLeague.Models.Response;
 using FootballLeague.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FootballLeague.Data.Models;
 
 namespace FootballLeague.Services
 {
@@ -22,17 +21,17 @@ namespace FootballLeague.Services
 
         public MatchService(ITeamService teamService, ILeagueService leagueService, FootballLeagueDbContext context)
         {
-            _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
-            _leagueService = leagueService ?? throw new ArgumentNullException(nameof(leagueService));
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _teamService = teamService;
+            _leagueService = leagueService;
+            _context = context;
         }
 
         /// <inheritdoc />
         public async Task<int> CreateMatchAsync(MatchRequestModel matchModel, CancellationToken cancellationToken)
         {
-            await _leagueService.CheckIfLeagueExistByIdAsync(matchModel.LeagueId, cancellationToken);
-            await _teamService.CheckIfTeamExistInLeagueAsync(matchModel.HomeTeamId, matchModel.LeagueId, cancellationToken);
-            await _teamService.CheckIfTeamExistInLeagueAsync(matchModel.AwayTeamId, matchModel.LeagueId, cancellationToken);
+            await _leagueService.ValidateLeagueExistAsync(matchModel.LeagueId, cancellationToken);
+            await _teamService.ValidateTeamExistInLeagueAsync(matchModel.HomeTeamId, matchModel.LeagueId, cancellationToken);
+            await _teamService.ValidateTeamExistInLeagueAsync(matchModel.AwayTeamId, matchModel.LeagueId, cancellationToken);
 
             var match = new Match()
             {
@@ -86,6 +85,8 @@ namespace FootballLeague.Services
         /// <inheritdoc />
         public async Task<IEnumerable<MatchResponseModel>> GetAllMatchesAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             return await _context.Matches
                 .Include(m => m.League)
                 .Include(m => m.HomeTeam)
@@ -106,6 +107,8 @@ namespace FootballLeague.Services
         /// <inheritdoc />
         public async Task<IEnumerable<MatchResponseModel>> GetAllTeamMatchesAsync(int teamId, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             return await _context.Matches
                 .Include(m => m.League)
                 .Include(m => m.HomeTeam)
@@ -127,6 +130,8 @@ namespace FootballLeague.Services
         /// <inheritdoc />
         public async Task PlayMatchAsync(MatchRequestModel matchModel, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var match = await GetMatchAsync(matchModel.Id, cancellationToken);
 
             if (match.IsMatchPlayed)
@@ -161,9 +166,11 @@ namespace FootballLeague.Services
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        private Task<Match> GetMatchAsync(int id, CancellationToken cancellationToken)
+        private async Task<Match> GetMatchAsync(int id, CancellationToken cancellationToken)
         {
-            var match = _context.Matches
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var match = await _context.Matches
                          .Include(m => m.HomeTeam)
                          .Include(m => m.AwayTeam)
                          .FirstOrDefaultAsync(m => m.Id == id, cancellationToken);

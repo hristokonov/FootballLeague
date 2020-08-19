@@ -1,16 +1,15 @@
 ﻿using FootballLeague.Constants;
 using FootballLeague.CustomExceptions;
 using FootballLeague.Data;
+using FootballLeague.Data.Models;
 using FootballLeague.Models.Request;
 using FootballLeague.Models.Response;
 using FootballLeague.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FootballLeague.Data.Models;
 
 namespace FootballLeague.Services
 {
@@ -20,7 +19,7 @@ namespace FootballLeague.Services
 
         public LeagueService(FootballLeagueDbContext context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context;
         }
 
         /// <inheritdoc />
@@ -34,7 +33,7 @@ namespace FootballLeague.Services
 
             if (leagueExists)
             {
-                throw new EntityAlreadyExistsException($"League with this name {leagueModel.Name} already exist");
+                throw new EntityAlreadyExistsException(string.Format(ErrorMessages.LeagueExists, leagueModel.Name));
             }
 
             var league = new League { Name = leagueModel.Name };
@@ -51,34 +50,34 @@ namespace FootballLeague.Services
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var league = await _context.Leagues
+            var leagueModel = await _context.Leagues
                                       .Include(l => l.Teams)
                                       .ThenInclude(m => m.HomeMatches)
                                       .Include(l => l.Teams)
                                       .ThenInclude(m => m.AwayMatches)
-                                      .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
-            if (league == null)
-            {
-                throw new EntityNotFoundException($"League with this id {id} doesn't exist");
-            }
+                                      .Where(l => l.Id == id)
+                                      .Select(l => new LeagueResponseModel
+                                      {
+                                          Name = l.Name,
+                                          Teams = l.Teams.Select(t => new TeamResponseModel()
+                                          {
+                                              Id = t.Id,
+                                              Name = t.Name,
+                                              MatchesPlayed = t.HomeMatches.Count + t.AwayMatches.Count,
+                                              GoalsScored = t.GoalsScored,
+                                              GoalsConceded = t.GoalsConceded,
+                                              GoalDifference = t.GoalsScored - t.GoalsConceded,
+                                              Points = t.Points,
+                                              LeagueName = l.Name
+                                          }).OrderByDescending(t => t.Points)
+                                           .ThenByDescending(t => t.GoalDifference)
+                                           .ToList()
+                                      }).FirstOrDefaultAsync(cancellationToken);
 
-            var leagueModel = new LeagueResponseModel
+            if (leagueModel == null)
             {
-                Name = league.Name,
-                Teams = league.Teams.Select(t => new TeamResponseModel()
-                {
-                    Id = t.Id,
-                    Name = t.Name,
-                    MatchesPlayed = t.HomeMatches.Count + t.AwayMatches.Count,
-                    GoalsScored = t.GoalsScored,
-                    GoalsConceded = t.GoalsConceded,
-                    GoalDifference = t.GoalsScored - t.GoalsConceded,
-                    Points = t.Points,
-                    LeagueName = league.Name
-                }).OrderByDescending(t => t.Points)
-                .ThenByDescending(t => t.GoalDifference)
-                .ToList()
-            };
+                throw new EntityNotFoundException(string.Format(ErrorMessages.LeagueNotFound, id));
+            }
 
             AssignTablePosition(leagueModel.Teams);
 
@@ -86,14 +85,16 @@ namespace FootballLeague.Services
         }
 
         /// <inheritdoc />
-        public async Task CheckIfLeagueExistByIdAsync(int leagueId, CancellationToken cancellationToken)
+        public async Task ValidateLeagueExistAsync(int id, CancellationToken cancellationToken)
         {
-            var leagueExists = await _context.Leagues.Where(l => l.Id == leagueId)
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var leagueExists = await _context.Leagues.Where(l => l.Id == id)
                                                    .AnyAsync(cancellationToken);
 
             if (!leagueExists)
             {
-                throw new EntityNotFoundException(string.Format(ErrorMessages.LeagueNotFound, leagueId));
+                throw new EntityNotFoundException(string.Format(ErrorMessages.LeagueNotFound, id));
             }
         }
 

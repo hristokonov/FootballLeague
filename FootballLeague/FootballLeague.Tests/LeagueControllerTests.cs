@@ -20,7 +20,7 @@ namespace FootballLeague.Tests
         private static readonly Fixture _fixture = new Fixture();
 
         [TestMethod]
-        public async Task CreateLeagueAsync_ReturnStatusCodeCreated()
+        public async Task CreateLeague_ReturnStatusCodeCreated()
         {
             //Arrange
             var _mockLeagueService = new Mock<ILeagueService>();
@@ -36,7 +36,7 @@ namespace FootballLeague.Tests
                 .Verifiable();
 
             //Act
-            var result = await controller.CreateLeagueAsync(leagueModel, CToken);
+            var result = await controller.CreateLeague(leagueModel, CToken);
             var objectResult = result as ObjectResult;
 
             //Assert
@@ -45,7 +45,7 @@ namespace FootballLeague.Tests
         }
 
         [TestMethod]
-        public async Task GetLeagueTableAsync_ReturnStatusCodeOk()
+        public async Task GetLeagueTable_ReturnStatusCodeOk()
         {
             //Arrange
             var _mockLeagueService = new Mock<ILeagueService>();
@@ -61,8 +61,8 @@ namespace FootballLeague.Tests
                 .Verifiable();
 
             //Act
-            var result = await controller.GetLeagueTableAsync(leagueId, CToken);
-          
+            var result = await controller.GetLeagueTable(leagueId, CToken);
+            
             //Assert
             Assert.IsInstanceOfType(result, typeof(ActionResult<LeagueResponseModel>));
             _mockLeagueService.Verify();
