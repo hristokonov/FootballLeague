@@ -64,14 +64,14 @@ namespace FootballLeague.Tests
             }
 
             //Act,Assert
-            using (var assertContex = new FootballLeagueDbContext(_options))
+            using (var assertContext = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContext);
 
                 var res = await sut.CreateTeamAsync(teamModel, CToken);
 
                 Assert.AreEqual(1, res);
-                Assert.AreEqual(1, assertContex.Teams.Count());
+                Assert.AreEqual(1, assertContext.Teams.Count());
             }
         }
 
@@ -102,9 +102,9 @@ namespace FootballLeague.Tests
             }
 
             //Act,Assert
-            using (var assertContex = new FootballLeagueDbContext(_options))
+            using (var assertContext = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContext);
 
                 var ex = await Assert.ThrowsExceptionAsync<EntityAlreadyExistsException>(
                   async () => await sut.CreateTeamAsync(teamModel, CToken));
@@ -116,8 +116,7 @@ namespace FootballLeague.Tests
         {
             //Arrange
             var teamId = _fixture.Create<int>();
-            var leagueId = _fixture.Create<int>();
-
+            
             var team = _fixture.Build<Team>()
                  .With(t => t.Id, teamId)
                  .Without(t => t.HomeMatches)
@@ -132,13 +131,13 @@ namespace FootballLeague.Tests
             }
 
             //Act,Assert
-            using (var assertContex = new FootballLeagueDbContext(_options))
+            using (var assertContext = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContext);
 
                 await sut.DeleteTeamAsync(teamId, CToken);
 
-                Assert.AreEqual(0, assertContex.Teams.Count());
+                Assert.AreEqual(0, assertContext.Teams.Count());
             }
         }
 
@@ -147,8 +146,7 @@ namespace FootballLeague.Tests
         {
             //Arrange
             var teamId = _fixture.Create<int>();
-            var leagueId = _fixture.Create<int>();
-
+           
             var team = _fixture.Build<Team>()
                  .With(t => t.Id, teamId + 1)
                  .Without(t => t.HomeMatches)
@@ -163,14 +161,14 @@ namespace FootballLeague.Tests
             }
 
             //Act,Assert
-            using (var assertContex = new FootballLeagueDbContext(_options))
+            using (var assertContext = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContext);
 
                 var ex = await Assert.ThrowsExceptionAsync<EntityNotFoundException>(
                   async () => await sut.DeleteTeamAsync(teamId, CToken));
 
-                Assert.AreEqual(1, assertContex.Teams.Count());
+                Assert.AreEqual(1, assertContext.Teams.Count());
             }
         }
 
@@ -187,9 +185,9 @@ namespace FootballLeague.Tests
             _mockTeamDetailService.Setup(t => t.GetTeamDetailsAsync(teamId, CToken)).ReturnsAsync(team);
 
             //Act,Assert
-            using (var assertContex = new FootballLeagueDbContext(_options))
+            using (var assertContext = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContext);
 
                 var res = await sut.GetTeamDetailsAsync(teamId, CToken);
 
@@ -229,15 +227,15 @@ namespace FootballLeague.Tests
             }
 
             //Act,Assert
-            using (var assertContex = new FootballLeagueDbContext(_options))
+            using (var assertContext = new FootballLeagueDbContext(_options))
             {
-                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContex);
+                var sut = new TeamService(_mockLeagueService.Object, _mockTeamDetailService.Object, assertContext);
 
                 await sut.ValidateTeamExistInLeagueAsync(teamId, leagueId, CToken);
 
-                Assert.AreEqual(1, assertContex.Teams.Count());
-                Assert.AreEqual(teamId, assertContex.Teams.FirstOrDefault().Id);
-                Assert.AreEqual(leagueId, assertContex.Teams.FirstOrDefault().LeagueId);
+                Assert.AreEqual(1, assertContext.Teams.Count());
+                Assert.AreEqual(teamId, assertContext.Teams.FirstOrDefault().Id);
+                Assert.AreEqual(leagueId, assertContext.Teams.FirstOrDefault().LeagueId);
             }
         }
 

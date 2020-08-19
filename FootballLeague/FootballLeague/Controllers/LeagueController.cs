@@ -47,7 +47,7 @@ namespace FootballLeague.Controllers
 
             var leagueModel = await _leagueService.GetLeagueTableAsync(id, cancellationToken);
 
-            return Ok(leagueModel); ;
+            return Ok(leagueModel);
         }
     }
 }
