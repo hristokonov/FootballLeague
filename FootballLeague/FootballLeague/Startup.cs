@@ -32,6 +32,8 @@ namespace FootballLeague
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IMatchService, MatchService>();
             services.AddScoped<ILeagueService, LeagueService>();
+            services.AddScoped<ITeamDetailsService, TeamDetailServiceDecorator>();
+            services.AddScoped<TeamDetailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
