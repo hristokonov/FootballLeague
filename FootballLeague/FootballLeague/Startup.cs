@@ -32,7 +32,7 @@ namespace FootballLeague
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IMatchService, MatchService>();
             services.AddScoped<ILeagueService, LeagueService>();
-            services.AddScoped<ITeamDetailService, TeamDetailServiceDecorator>();
+            services.AddScoped<ITeamDetailService, TeamDetailCacheDecorator>();
             services.AddScoped<TeamDetailService>();
         }
 
